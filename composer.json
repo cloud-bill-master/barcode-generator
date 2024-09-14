@@ -1,0 +1,28 @@
+{
+    "name": "cloud-bill-master/php-barcode",
+    "description": "A Barcode Generator Composer Package.",
+    "version":"1.0.0",
+    "type": "library",
+    "license": "GPTv3",
+    "autoload": {
+        "psr-4": {
+            "CBM\\Barcode\\": "src/"
+        }
+    },
+    "support": {
+        "email": "dev@cloudbillmaster.com",
+        "docs": "https://cloudbillmaster.com"
+    },
+    "homepage": "https://cloudbillmaster.com",
+    "authors": [
+        {
+            "name": "Showket Ahmed",
+            "email": "dev@cloudbillmaster.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "php": ">=8.0",
+        "ext-gd": "*"
+    }
+}
