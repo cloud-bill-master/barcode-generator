@@ -1,2 +1,2 @@
-# barcode-generator
+# CBM Barcode Generator
 A Barcode Generator Composer Package.
