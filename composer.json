@@ -20,7 +20,7 @@
             "email": "dev@cloudbillmaster.com"
         }
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=8.0",
         "ext-gd": "*"
