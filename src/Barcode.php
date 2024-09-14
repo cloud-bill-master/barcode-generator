@@ -34,15 +34,15 @@ use GdImage;
 		public Int $width = 300;
 
 		// Image Height
-		public Int $height = 120;
-
-		// Barcode Binary Stream
-		public String $stream;
+		public Int $height = 150;
 
 		// GdImage
 		public GdImage $image;
 
-		public function __construct(string $input, string $type = '128B')
+		// Image File Path
+		public String $path;
+
+		public function __construct(int|string $input, string $type = '128B')
 		{
 			$this->input = trim($input);
 			$this->type = "Type".strtoupper(trim($type));
@@ -50,7 +50,9 @@ use GdImage;
 
 		// Generate Binary Stream
 		public function generate():void
-		{			
+		{
+			$this->width = ($this->width < 300) ? 300 : $this->width;
+			$this->height = ($this->height < 150) ? 150 : $this->height;
 			$class = "\\CBM\\Barcode\\".$this->type;
 			$type = (class_exists($class)) ? new $class : new Type128B;
 
@@ -66,11 +68,9 @@ use GdImage;
 			$checksum = $type::START_CODE_VALUE;
 
 			$count = strlen($this->input);
-			for ($i = 0; $i < $count; $i++) { 
-				
+			for ($i = 0; $i < $count; $i++) {
 				$position++;
-				$bin .= $data[$this->input[$i]]['bin'] ?? '';
-				
+				$bin .= $data[$this->input[$i]]['bin'] ?? '';				
 				$checksum = $checksum + ($position * ($data[$this->input[$i]]['value'] ?? 0));
 			}
 
@@ -96,28 +96,30 @@ use GdImage;
 			$bg = imagecolorallocate($this->image, 255, 255, 255);
 			$fill = imagecolorallocate($this->image, $this->txcolor[0], $this->txcolor[1], $this->txcolor[2]);
 
+			// Make Barcode
 			$count = strlen($bin);
 			$gap = $this->width / $count;
-
+			$printHeight = ($this->height / 3);
 			for ($i = 0; $i < $count; $i++) { 				
 				$x1 = $i * $gap;
 				$x2 = $x1 + $gap;
 				$color = ($bin[$i]) ? $fill : $bg;
-				imagefilledrectangle($this->image, $x1, 10, $x2, ($this->height - 50), $color);
+				imagefilledrectangle($this->image, $x1, 10, $x2, ($this->height - $printHeight), $color);
 			}
-			// Set Additional Texts
-			$txt_height = 50;
-			foreach($this->text as $text){
-				imagestring($this->image, 5, 20, ($this->height - $txt_height), $text, $fill);
-				$txt_height -= 15;
-			}
-			imagestring($this->image, 5, 20, ($this->height - $txt_height), $this->input, $fill);
-			$this->stream = imagejpeg($this->image);
-			// return $stream;
-			var_dump($this->stream);
-			die;
+			$printHeight = $this->height - $printHeight;
 
+			// Set Additional Texts
+			imagestring($this->image, 3, 30, $printHeight, $this->input, $fill);
+			foreach($this->text as $text){
+				imagestring($this->image, 5, 30, ($printHeight + 15), $text, $fill);
+				$printHeight += 15;
+			}
+			imagejpeg($this->image, $this->path, 100);
+		}
+
+		// Final Call
+		public function _destruct()
+		{
 			imagedestroy($this->image);
 		}
-	// Destruct
 	}
