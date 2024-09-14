@@ -3,7 +3,7 @@
     "description": "A Barcode Generator Composer Package.",
     "version":"1.0.0",
     "type": "library",
-    "license": "GPTv3",
+    "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "CBM\\Barcode\\": "src/"
